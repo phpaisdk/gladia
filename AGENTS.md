@@ -8,10 +8,11 @@ Official Gladia provider for the PHP AI SDK. Part of the framework-agnostic [PHP
 use AiSdk\Content;
 use AiSdk\Generate;
 use AiSdk\Gladia;
+use AiSdk\LocalFile;
 
 Gladia::create(['apiKey' => '...']); // optional: environment variables below are read automatically
 
-$result = Generate::transcription(Content::audio('/path/to/audio.mp3'))
+$result = Generate::transcription(Content::audio(LocalFile::at('/path/to/audio.mp3')))
     ->model(Gladia::model('model-id'))
     ->run();
 
