@@ -2,7 +2,7 @@
 
 Notable changes to `aisdk/gladia`. Release notes are also published at https://github.com/phpaisdk/gladia/releases.
 
-## Unreleased (v0.10.1)
+## v0.10.1 — 2026-10-29
 
 - Raise SDK exceptions instead of native PHP ones.
 
