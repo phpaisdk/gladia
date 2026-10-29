@@ -7,6 +7,7 @@ namespace AiSdk\Gladia\Models;
 use AiSdk\ContentSource;
 use AiSdk\Contracts\BaseModel;
 use AiSdk\Contracts\TranscriptionModelInterface;
+use AiSdk\Exceptions\InvalidResponseException;
 use AiSdk\Gladia\GladiaOptions;
 use AiSdk\Requests\TranscriptionRequest;
 use AiSdk\Responses\TranscriptionResponse;
@@ -35,7 +36,7 @@ final class GladiaTranscriptionModel extends BaseModel implements TranscriptionM
         $submitted = $runner->postJson(Url::joinPath($this->options->baseUrl, '/v2/pre-recorded'), array_replace(['audio_url' => $audioUrl, 'model' => $this->modelId], $request->providerOptionsFor($this->provider())), $this->options->authHeaders(), $this->provider());
         $id = (string) ($submitted['id'] ?? '');
         if ($id === '') {
-            throw new \RuntimeException('Gladia did not return a transcription id.');
+            throw new InvalidResponseException('Gladia did not return a transcription id.');
         }
 
         do {
@@ -45,7 +46,7 @@ final class GladiaTranscriptionModel extends BaseModel implements TranscriptionM
             $payload = $runner->getJson(Url::joinPath($this->options->baseUrl, '/v2/pre-recorded/' . rawurlencode($id)), $this->options->authHeaders(), $this->provider());
         } while (in_array($payload['status'] ?? '', ['queued', 'processing'], true));
         if (($payload['status'] ?? '') === 'error') {
-            throw new \RuntimeException('Gladia transcription failed: ' . (string) ($payload['error']['message'] ?? 'unknown error'));
+            throw new InvalidResponseException('Gladia transcription failed: ' . (string) ($payload['error']['message'] ?? 'unknown error'));
         }
 
         $transcription = is_array($payload['result']['transcription'] ?? null) ? $payload['result']['transcription'] : [];
@@ -72,7 +73,7 @@ final class GladiaTranscriptionModel extends BaseModel implements TranscriptionM
         $payload = json_decode((string) $this->runner($this->options->sdk)->sendRequest($upload, $this->provider())->getBody(), true);
         $url = is_array($payload) ? (string) ($payload['audio_url'] ?? '') : '';
         if ($url === '') {
-            throw new \RuntimeException('Gladia did not return an uploaded audio URL.');
+            throw new InvalidResponseException('Gladia did not return an uploaded audio URL.');
         }
         return $url;
     }
