@@ -1,12 +1,6 @@
-# aisdk/gladia
+# PHP AI SDK — Gladia
 
-<a href="https://github.com/phpaisdk/gladia/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/phpaisdk/gladia/tests.yml?branch=main&label=Tests"></a>
-<a href="https://packagist.org/packages/aisdk/gladia"><img alt="Latest Version" src="https://img.shields.io/packagist/v/aisdk/gladia"></a>
-<a href="https://packagist.org/packages/aisdk/gladia"><img alt="License" src="https://img.shields.io/packagist/l/aisdk/gladia"></a>
-
-------
-
-Official Gladia provider for the PHP AI SDK. Uses Gladia's native pre-recorded transcription API.
+Audio transcription with Gladia for the framework-agnostic [PHP AI SDK](https://phpaisdk.com).
 
 ## Installation
 
@@ -14,39 +8,28 @@ Official Gladia provider for the PHP AI SDK. Uses Gladia's native pre-recorded t
 composer require aisdk/gladia
 ```
 
-## Basic Usage
+Set `GLADIA_API_KEY` in your environment.
+
+## Usage
 
 ```php
 use AiSdk\Content;
 use AiSdk\Generate;
 use AiSdk\Gladia;
 
-Gladia::create(['apiKey' => $_ENV['GLADIA_API_KEY']]);
-
-$result = Generate::transcription()
-    ->model(Gladia::model('solaria-3'))
-    ->audio(Content::audio('https://example.com/audio.mp3'))
+$result = Generate::transcription(Content::audio(__DIR__.'/meeting.mp3'))
+    ->model(Gladia::model('solaria-1'))
     ->run();
+
+echo $result->output->text;
 ```
-
-## Configuration
-
-| Variable | Description | Default |
-| --- | --- | --- |
-| `GLADIA_API_KEY` | API key for authentication | Required |
-| `GLADIA_BASE_URL` | Base URL for API requests | `https://api.gladia.io` |
-
-## Supported Capabilities
-
-| Capability | Support |
-| --- | --- |
-| Pre-recorded transcription | Native `/v2/pre-recorded` job |
-| Remote audio URLs | Native |
-| Local audio files | Uploaded with `/v2/upload` |
-
-Use `providerOptions('gladia', [...])` for Gladia request fields including diarization, language configuration, and audio-intelligence options.
 
 ## Documentation
 
-- [Gladia pre-recorded API reference](https://docs.gladia.io/api-reference/v2/pre-recorded/init)
-- [PHP AI SDK documentation](https://phpaisdk.com/docs/gladia)
+[Read the documentation](https://phpaisdk.com/docs/0.x/providers/gladia) for configuration, supported features, and more examples.
+
+[Contributing](https://github.com/phpaisdk/.github/blob/main/CONTRIBUTING.md) · [Support](https://github.com/phpaisdk/.github/blob/main/SUPPORT.md)
+
+## License
+
+The MIT License (MIT). See [LICENSE](LICENSE) for details.
